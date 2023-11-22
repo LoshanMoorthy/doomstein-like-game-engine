@@ -38,6 +38,10 @@ static void verline(int x, int y0, int y1, u32 color) {
     }
 }
 
+void render() {
+    // TODO
+}
+
 int main(int argc, char* argv[]) {
     ASSERT(
         !SDL_Init(SDL_INIT_VIDEO),
