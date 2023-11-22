@@ -7,6 +7,23 @@
 #include "engine/assert.h"
 #include "engine/utils.h"
 
+/*
+* Each number represents a specific tile or elem in map 
+* 1 represents wall tiles or bound
+* 0 represents empty space
+* 2, 3, 4 represents specific obj or elemt
+*/
+static u8 MAPDATA[8 * 8] = {
+    1, 1, 1, 1, 1, 1, 1, 1,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 0, 0, 0, 3, 0, 1,
+    1, 0, 0, 0, 0, 0, 0, 1,
+    1, 0, 2, 0, 4, 4, 0, 1,
+    1, 0, 0, 0, 4, 0, 0, 1,
+    1, 0, 3, 0, 0, 0, 0, 1,
+    1, 1, 1, 1, 1, 1, 1, 1,
+};
+
 struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -14,6 +31,12 @@ struct {
     u32 pixels[SCREEN_WIDTH * SCREEN_HEIGHT];
     bool quit;
 } state;
+
+static void verline(int x, int y0, int y1, u32 color) {
+    for (int y = y0; y < y1; y++) {
+        state.pixels[(y * SCREEN_WIDTH) + x] = color;
+    }
+}
 
 int main(int argc, char* argv[]) {
     ASSERT(
@@ -70,6 +93,17 @@ int main(int argc, char* argv[]) {
         }
         
         state.pixels[(10 * SCREEN_WIDTH) + 5] = 0xFFFF00FF;
+
+        SDL_UpdateTexture(state.texture, NULL, state.pixels, SCREEN_WIDTH * 4);
+        SDL_RenderCopyEx(
+            state.renderer,
+            state.texture,
+            NULL,
+            NULL,
+            0.0,
+            NULL,
+            SDL_FLIP_VERTICAL
+        );
         SDL_RenderPresent(state.renderer);
     }
 
