@@ -30,6 +30,8 @@ struct {
     SDL_Texture *texture;
     u32 pixels[SCREEN_WIDTH * SCREEN_HEIGHT];
     bool quit;
+
+    v2 pos, dir, plane;
 } state;
 
 static void verline(int x, int y0, int y1, u32 color) {
@@ -39,7 +41,31 @@ static void verline(int x, int y0, int y1, u32 color) {
 }
 
 void render() {
-    // TODO
+    for (int x = 0; x < SCREEN_WIDTH; x++) {
+        const f32 xcam = (2 * (x / (f32) (SCREEN_WIDTH))) - 1;
+
+        const v2 dir = {
+            state.dir.x + state.plane.x * xcam,
+            state.dir.y + state.plane.y * xcam
+        };
+
+        v2 pos = state.pos;
+        v2i ipos = { (int) pos.x, (int) pos.y };
+        
+        const v2 deltadist = {
+            fabsf(dir.x) < 1e-20 ? 1e30 : fabsf(1.0f / dir.x),
+            fabsf(dir.y) < 1e-20 ? 1e30 : fabsf(1.0f / dir.y),
+        };
+
+        v2 sidedist = {
+            deltadist.x * (dir.x < 0 ? (pos.x - ipos.x) : (ipos.x + 1 - pos.x)),
+            deltadist.y * (dir.y < 0 ? (pos.y - ipos.y) : (ipos.y + 1 - pos.y)),
+        };
+
+        const v2i step = { (int) sign(dir.x), (int) sign(dir.y) };
+
+
+    }
 }
 
 int main(int argc, char* argv[]) {
@@ -108,6 +134,7 @@ int main(int argc, char* argv[]) {
             NULL,
             SDL_FLIP_VERTICAL
         );
+        SDL_RenderPresent(state.renderer);
     }
 
     SDL_DestroyTexture(state.texture);

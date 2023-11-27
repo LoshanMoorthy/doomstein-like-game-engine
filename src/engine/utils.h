@@ -52,7 +52,10 @@ typedef ssize_t  isize;
 #define max(_a, _b) ({ __typeof__(_a) __a = (_a), __b = (_b); __a > __b ? __a : __b; })
 #define clamp(_x, _mi, _ma) (min(max(_x, _mi), _ma))
 #define ifnan(_x, _alt) ({ __typeof__(_x) __x = (_x); isnan(__x) ? (_alt) : __x; })
-
+#define sign(a) ({                                       \
+        __typeof__(a) _a = (a);                          \
+        (__typeof__(a))(_a < 0 ? -1 : (_a > 0 ? 1 : 0)); \
+    })
 // -1 right, 0 on, 1 left
 #define point_side(_p, _a, _b) ({                                              \
         __typeof__(_p) __p = (_p), __a = (_a), __b = (_b);                         \
