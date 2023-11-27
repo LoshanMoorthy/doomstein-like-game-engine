@@ -108,7 +108,6 @@ int main(int argc, char* argv[]) {
             NULL,
             SDL_FLIP_VERTICAL
         );
-        SDL_RenderPresent(state.renderer);
     }
 
     SDL_DestroyTexture(state.texture);
