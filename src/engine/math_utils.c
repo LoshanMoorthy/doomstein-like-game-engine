@@ -1,7 +1,7 @@
 #include "utils.h"
 
 // Rotates a vector v by angle a
-v2 rotate(v2 v, f32 a) {
+v2 rotatev2(v2 v, f32 a) {
     return (v2) {
         (v.x * cos(a)) - (v.y * sin(a)),
         (v.x * sin(a)) + (v.y * cos(a)),
