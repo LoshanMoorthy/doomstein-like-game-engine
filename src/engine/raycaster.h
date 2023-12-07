@@ -44,4 +44,5 @@ typedef struct {
 void verline(State *state, int x, int y0, int y1, u32 color);
 void render(State *state);
 void rot(State *state, f32 rot);
+void load_wall_texture(SDL_Renderer* renderer);
 

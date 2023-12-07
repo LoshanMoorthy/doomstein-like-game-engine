@@ -1,8 +1,9 @@
 #include "raycaster.h"
 #include "utils.h"
 #include "assert.h"
-
+#include "../../include/SDL2_image/SDL_image.h"
 #include <math.h>
+#include <stdio.h>
 
 #define v2_to_v2i(_v) ({ __typeof__(_v) __v = (_v); (v2i) { __v.x, __v.y }; })
 #define v2i_to_v2(_v) ({ __typeof__(_v) __v = (_v); (v2) { __v.x, __v.y }; })
@@ -40,6 +41,19 @@ static u8 MAPDATA[MAP_SIZE * MAP_SIZE] = {
     1, 1, 1, 1, 1, 1, 1, 1,
 };
 
+SDL_Texture* load_texture(const char* path, SDL_Renderer* renderer) {
+    SDL_Surface* loaded_surface = IMG_Load(path);
+    SDL_Texture* texture = NULL;
+    if (loaded_surface != NULL) {
+        texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
+        SDL_FreeSurface(loaded_surface);
+    } else {
+        printf("error");
+    }
+    
+    return texture;
+}
+
 void verline(State *state, int x, int y0, int y1, u32 color) {
     for (int y = y0; y < y1; y++) {
         state->pixels[(y * SCREEN_WIDTH) + x] = color;
@@ -47,6 +61,13 @@ void verline(State *state, int x, int y0, int y1, u32 color) {
 }
 
 void render(State *state) {
+    SDL_Texture* wall_texture = load_texture("../../res/Doom.png", state->renderer);
+    ASSERT(
+        !wall_texture,
+        "Failed to load wall texture: %s\n",
+        SDL_GetError()
+    );
+
     for (int x = 0; x < SCREEN_WIDTH; x++) {
         // x coordinate in space from [-1, 1]
         const f32 xcam = (2 * (x / (f32) (SCREEN_WIDTH))) - 1;
@@ -100,8 +121,12 @@ void render(State *state) {
         }
 
         u32 color;
+        SDL_Rect wall_rect = { x, (int) y0, 1, y1 - y0 };
+
         switch (hit.val) {
-            case 1: color = 0xFF0000FF; break;
+            case 1:
+                SDL_RenderCopy(state->renderer, wall_texture, NULL, &wall_rect);
+                break;
             case 2: color = 0xFF00FF00; break;
             case 3: color = 0xFFFF0000; break;
             case 4: color = 0xFFFF00FF; break;
@@ -134,6 +159,8 @@ void render(State *state) {
         verline(state, x, y0, y1, color);
         verline(state, x, y1, SCREEN_HEIGHT - 1, 0xFF505050);
     }
+
+    SDL_DestroyTexture(wall_texture);
 }
 
 void rot(State *state, f32 rot) {

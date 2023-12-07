@@ -16,7 +16,6 @@
 #define dot(v0, v1)                  \
     ({ const v2 _v0 = (v0), _v1 = (v1); (_v0.x * _v1.x) + (_v0.y * _v1.y); })
 
-
 int main(int argc, char* argv[]) {
 
     State state;

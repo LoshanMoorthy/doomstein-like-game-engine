@@ -21,7 +21,3 @@
 
 #define ZNEAR 0.0001f 
 #define ZFAR 128.0f
-
-/* Macros */
-
-
