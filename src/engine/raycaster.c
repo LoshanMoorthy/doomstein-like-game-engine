@@ -1,7 +1,7 @@
 #include "raycaster.h"
 #include "utils.h"
 #include "assert.h"
-#include "../../include/SDL2_image/SDL_image.h"
+#include <SDL_image.h>
 #include <math.h>
 #include <stdio.h>
 
@@ -65,7 +65,7 @@ void render(State *state) {
     ASSERT(
         !wall_texture,
         "Failed to load wall texture: %s\n",
-        SDL_GetError()
+        IMG_GetError()
     );
 
     for (int x = 0; x < SCREEN_WIDTH; x++) {
